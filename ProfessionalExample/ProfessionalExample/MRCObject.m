@@ -7,6 +7,7 @@
 //
 
 #import "MRCObject.h"
+#import <UIKit/UIKit.h>
 
 @implementation MRCObject
 - (void)dealloc {
@@ -41,6 +42,32 @@
     MRCObject *obj = [self allocObject];
     [obj release];
     [obj release];
+}
++ (void)autoreleaseUse {
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    MRCObject *obj = [MRCObject allocObject];
+    [obj autorelease];
+    [pool drain];
+}
++ (void)lotOfAutoreleaseObjects {
+    NSLog(@"-------------begin");
+    for (int index = 0; index < 1000; index++) {
+        NSString *path = [[NSBundle mainBundle] pathForResource:@"1553667540126" ofType:@"jpeg"];
+        UIImage *image = [[UIImage alloc] initWithContentsOfFile:path];
+        [image autorelease];
+    }
+    NSLog(@"-------------end");
+}
++ (void)lotOfAutoreleaseObjectsRelease {
+    NSLog(@"-------------begin");
+    for (int index = 0; index < 1000; index++) {
+        NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+        NSString *path = [[NSBundle mainBundle] pathForResource:@"1553667540126" ofType:@"jpeg"];
+        UIImage *image = [[UIImage alloc] initWithContentsOfFile:path];
+        [image autorelease];
+        [pool drain];
+    }
+    NSLog(@"-------------end");
 }
 
 @end

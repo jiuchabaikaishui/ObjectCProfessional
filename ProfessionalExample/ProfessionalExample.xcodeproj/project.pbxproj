@@ -15,6 +15,9 @@
 		5CC96247224A31AC001576F8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CC96246224A31AC001576F8 /* main.m */; };
 		5CC9624F224A330A001576F8 /* MRCObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CC9624E224A3309001576F8 /* MRCObject.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		5CC96252224A3942001576F8 /* MainModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CC96251224A3942001576F8 /* MainModel.m */; };
+		5CC96255224B1FDB001576F8 /* MainTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CC96254224B1FDB001576F8 /* MainTableViewCell.m */; };
+		5CC96259224B5289001576F8 /* 1553667540126.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 5CC96258224B5289001576F8 /* 1553667540126.jpeg */; };
+		5CC9625C224B6C72001576F8 /* ARCObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CC9625B224B6C72001576F8 /* ARCObject.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +35,11 @@
 		5CC9624E224A3309001576F8 /* MRCObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MRCObject.m; sourceTree = "<group>"; };
 		5CC96250224A3942001576F8 /* MainModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainModel.h; sourceTree = "<group>"; };
 		5CC96251224A3942001576F8 /* MainModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainModel.m; sourceTree = "<group>"; };
+		5CC96253224B1FDB001576F8 /* MainTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainTableViewCell.h; sourceTree = "<group>"; };
+		5CC96254224B1FDB001576F8 /* MainTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainTableViewCell.m; sourceTree = "<group>"; };
+		5CC96258224B5289001576F8 /* 1553667540126.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 1553667540126.jpeg; sourceTree = "<group>"; };
+		5CC9625A224B6C72001576F8 /* ARCObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARCObject.h; sourceTree = "<group>"; };
+		5CC9625B224B6C72001576F8 /* ARCObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARCObject.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +85,11 @@
 				5CC9624E224A3309001576F8 /* MRCObject.m */,
 				5CC96250224A3942001576F8 /* MainModel.h */,
 				5CC96251224A3942001576F8 /* MainModel.m */,
+				5CC96253224B1FDB001576F8 /* MainTableViewCell.h */,
+				5CC96254224B1FDB001576F8 /* MainTableViewCell.m */,
+				5CC96258224B5289001576F8 /* 1553667540126.jpeg */,
+				5CC9625A224B6C72001576F8 /* ARCObject.h */,
+				5CC9625B224B6C72001576F8 /* ARCObject.m */,
 			);
 			path = ProfessionalExample;
 			sourceTree = "<group>";
@@ -140,6 +153,7 @@
 			files = (
 				5CC96244224A31AC001576F8 /* LaunchScreen.storyboard in Resources */,
 				5CC96241224A31AC001576F8 /* Assets.xcassets in Resources */,
+				5CC96259224B5289001576F8 /* 1553667540126.jpeg in Resources */,
 				5CC9623F224A319D001576F8 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -151,6 +165,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5CC9625C224B6C72001576F8 /* ARCObject.m in Sources */,
+				5CC96255224B1FDB001576F8 /* MainTableViewCell.m in Sources */,
 				5CC9623C224A319C001576F8 /* ViewController.m in Sources */,
 				5CC96247224A31AC001576F8 /* main.m in Sources */,
 				5CC96252224A3942001576F8 /* MainModel.m in Sources */,

@@ -16,9 +16,9 @@
 }
 - (instancetype)initWithRowTitle:(NSString *)title detail:(NSString *)detail selectedAction:(SelectedBlock)selectedAction {
     if (self = [super init]) {
-        self.title = title;
-        self.detail = detail;
-        self.selectedAction = selectedAction;
+        _title = title;
+        _detail = detail;
+        _selectedAction = selectedAction;
     }
     
     return self;

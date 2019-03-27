@@ -14,6 +14,9 @@
 + (void)holdObject;
 + (void)releaseNoNeed;
 + (void)releaseNoHold;
++ (void)autoreleaseUse;
++ (void)lotOfAutoreleaseObjects;
++ (void)lotOfAutoreleaseObjectsRelease;
 
 @end
 

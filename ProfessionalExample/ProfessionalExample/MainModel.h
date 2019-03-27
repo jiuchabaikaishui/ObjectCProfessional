@@ -9,13 +9,16 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+#define MainCellTitleFont               [UIFont systemFontOfSize:17.0]
+#define MainCellDetailFont              [UIFont systemFontOfSize:12.0]
+
 typedef void(^SelectedBlock)(UIViewController *controller, UITableView *tableView, NSIndexPath *indexPath);
 
 @interface RowModel : NSObject
 
-@property (copy, nonatomic) NSString *title;
-@property (copy, nonatomic) NSString *detail;
-@property (copy, nonatomic) SelectedBlock selectedAction;
+@property (copy, nonatomic, readonly) NSString *title;
+@property (copy, nonatomic, readonly) NSString *detail;
+@property (copy, nonatomic, readonly) SelectedBlock selectedAction;
 
 + (instancetype)modelWithTitle:(NSString *)title detail:(NSString *)detail selectedAction:(SelectedBlock)selectedAction;
 
