@@ -11,6 +11,7 @@
 @interface ARCObject : NSObject
 
 + (instancetype)allocObject;
++ (instancetype)object;
 - (void)setStrongObject:(id)obj;
 - (void)setWeakObject:(id)obj;
 

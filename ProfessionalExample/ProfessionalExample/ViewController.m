@@ -11,6 +11,7 @@
 #import "MRCObject.h"
 #import "MainTableViewCell.h"
 #import "ARCObject.h"
+#import <objc/runtime.h>
 
 @interface ViewController () <UITableViewDelegate, UITableViewDataSource>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -48,18 +49,6 @@
         }];
         [autorelease addRowModelWithTitle:@"废弃NSAutoreleasePool对象" detail:@"大量产生autorelease对象时，如果及时废弃NSAutoreleasePool对象，则不会发现内存剧增。" selectedAction:^(UIViewController *controller, UITableView *tableView, NSIndexPath *indexPath) {
             [MRCObject lotOfAutoreleaseObjectsRelease];
-        }];
-        [autorelease addRowModelWithTitle:@"循环中生成大量对象" detail:@"单次次循环结束，则作用域也结束，就会销毁单次创建的对象，并不会累计到循环全部结束时才去销毁。" selectedAction:^(UIViewController *controller, UITableView *tableView, NSIndexPath *indexPath) {
-            for (int index = 0; index < 2; index++) {
-                if (index == 0) {
-                    NSLog(@"-------------begin");
-                    MRCObject *obj = [[MRCObject alloc] init];
-                    NSLog(@"%@(%@)生成了", NSStringFromClass(obj.class), obj);
-                }
-                if (index == 1) {
-                    NSLog(@"-------------end");
-                }
-            }
         }];
         [_mainModel addSectionModel:autorelease];
         
@@ -103,6 +92,61 @@
             }
             NSLog(@"%@(%@)", NSStringFromClass(obj.class), obj);
         }];
+        [arc addRowModelWithTitle:@"ARC有效时不能使用outorelease方法和NSAutoreleasePool类" detail:@"使用@outoreleasepool{}块代码来代替NSAutoreleasePool类对象的生成持有以及废弃。通过赋值给__outoreleasing修饰符的变量来代替调用outorelease方法，也就是说对象被注册到autoreleasepool中。" selectedAction:^(UIViewController *controller, UITableView *tableView, NSIndexPath *indexPath) {
+            @autoreleasepool {
+                ARCObject __autoreleasing *obj1 = [ARCObject allocObject];
+                NSLog(@"autoreleasepool块最后一行%@", obj1);
+            }
+            NSLog(@"autoreleasepool块已经结束");
+        }];
+        [arc addRowModelWithTitle:@"非显示的使用__outoreleasing修饰符" detail:@"cocoa中由于编译器会检查方法名是否以alloc/new/copy/mutableCopy开始，如果不是则自动将返回值的对象注册到outoreleasepool中。" selectedAction:^(UIViewController *controller, UITableView *tableView, NSIndexPath *indexPath) {
+            NSMutableArray __weak *array = nil;
+            NSLog(@"作用域块开始前%@", array);
+            {
+                NSMutableArray *arr = [NSMutableArray arrayWithObject:@(1)];
+                array = arr;
+                NSLog(@"作用域块最后一行%@", array);
+            }
+            NSLog(@"作用域块已经结束%@", array);
+        }];
+        [arc addRowModelWithTitle:@"循环中生成大量对象" detail:@"单次次循环结束，则作用域也结束，就会销毁单次创建的对象，并不会累计到循环全部结束时才去销毁。" selectedAction:^(UIViewController *controller, UITableView *tableView, NSIndexPath *indexPath) {
+            for (int index = 0; index < 2; index++) {
+                if (index == 0) {
+                    NSLog(@"-------------begin");
+                    ARCObject *obj = [[ARCObject alloc] init];
+                    NSLog(@"%@(%@)生成了", NSStringFromClass(obj.class), obj);
+                }
+                if (index == 1) {
+                    NSLog(@"-------------end");
+                }
+            }
+        }];
+        [arc addRowModelWithTitle:@"c静态数组" detail:@"各修饰符与修饰OC对象一样没有区别。" selectedAction:^(UIViewController *controller, UITableView *tableView, NSIndexPath *indexPath) {
+            {
+                ARCObject *array[2];
+                array[0] = [ARCObject allocObject];
+                NSLog(@"array第一个元素：%@", array[0]);
+                NSLog(@"array第二个元素：%@", array[1]);
+                array[1] = nil;
+                NSLog(@"array第二个元素：%@", array[1]);
+            }
+            NSLog(@"作用域块已经结束");
+        }];
+        [arc addRowModelWithTitle:@"c动态数组" detail:@"各修饰符与修饰OC对象一样没有区别。" selectedAction:^(UIViewController *controller, UITableView *tableView, NSIndexPath *indexPath) {
+            {
+                ARCObject *__strong *array;
+                array = (ARCObject *__strong *)calloc(2, sizeof(ARCObject *));
+                NSLog(@"array第一个元素：%@", array[0]);
+                NSLog(@"array第二个元素：%@", array[1]);
+                array[0] = [ARCObject allocObject];
+                array[1] = [ARCObject allocObject];
+                array[0] = nil;
+                NSLog(@"array第一个元素：%@", array[0]);
+                NSLog(@"array第二个元素：%@", array[1]);
+                free(array);
+            }
+            NSLog(@"作用域块已经结束");
+        }];
         [_mainModel addSectionModel:arc];
     }
     
@@ -112,8 +156,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     self.title = self.mainModel.title;
+}
+- (BOOL)performOperationWithError:(ARCObject **)obj {
+    *obj = [ARCObject object];
+    return NO;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {

@@ -26,6 +26,10 @@
     NSLog(@"%@(%@)生成了", NSStringFromClass(obj.class), obj);
     return obj;
 }
++ (instancetype)object {
+    ARCObject __autoreleasing *obj = [self allocObject];
+    return obj;
+}
 - (void)setStrongObject:(id)obj {
     _strongObj = obj;
 }
