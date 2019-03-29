@@ -148,6 +148,25 @@
             NSLog(@"作用域块已经结束");
         }];
         [_mainModel addSectionModel:arc];
+        
+        SectionModel *blocks = [SectionModel modelWithTitle:@"Blocks"];
+        [blocks addRowModelWithTitle:@"Block截获自动变量" detail:@"Block表达式截获所使用的自动变量的值，即保存该自动变量的瞬间值，所以在执行Block语法后，即使改写了Block中使用的自动变量的值也不会影响Block执行时的值。" selectedAction:^(UIViewController *controller, UITableView *tableView, NSIndexPath *indexPath) {
+            int a = 1;
+            void (^block) (void) = ^{
+                NSLog(@"%i", a);
+            };
+            a = 2;
+            block();
+        }];
+        [blocks addRowModelWithTitle:@"Block不支持c语言数组的自动变量截获" detail:@"如果Block中需要截获c语言数组，那么需要使用指针代替。" selectedAction:^(UIViewController *controller, UITableView *tableView, NSIndexPath *indexPath) {
+            int nums[4] = {1, 2, 3, 4};
+            int *p = nums;
+            void (^block) (void) = ^{
+                NSLog(@"%i", *(p + 1));
+            };
+            block();
+        }];
+        [_mainModel addSectionModel:blocks];
     }
     
     return _mainModel;
@@ -155,7 +174,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
     
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     self.title = self.mainModel.title;
