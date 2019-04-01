@@ -14,10 +14,12 @@
 #import <objc/runtime.h>
 
 @interface ViewController () <UITableViewDelegate, UITableViewDataSource>
+
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) MainModel *mainModel;
 
 @end
+
 
 @implementation ViewController
 
@@ -165,6 +167,16 @@
                 NSLog(@"%i", *(p + 1));
             };
             block();
+        }];
+        [blocks addRowModelWithTitle:@"数组存Block" detail:@"栈上的Block存进数组不会复制到堆上，需要手动复制，否则会产生垂悬指针造成奔溃。" selectedAction:^(UIViewController *controller, UITableView *tableView, NSIndexPath *indexPath) {
+            NSArray *array;
+            {
+                int a = 2;
+                array = [NSArray arrayWithObjects:[^{ NSLog(@"a + a = %i", a + a); } copy], ^{ NSLog(@"a * a = %i", a * a); }, nil];
+            }
+            typedef void (^Block) (void);
+            Block first = [array firstObject];
+            first();
         }];
         [_mainModel addSectionModel:blocks];
     }
