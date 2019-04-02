@@ -18,6 +18,7 @@
 		5CC96255224B1FDB001576F8 /* MainTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CC96254224B1FDB001576F8 /* MainTableViewCell.m */; };
 		5CC96259224B5289001576F8 /* 1553667540126.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 5CC96258224B5289001576F8 /* 1553667540126.jpeg */; };
 		5CC9625C224B6C72001576F8 /* ARCObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CC9625B224B6C72001576F8 /* ARCObject.m */; };
+		5CC9625F2253511A001576F8 /* BlockObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CC9625E2253511A001576F8 /* BlockObject.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +41,8 @@
 		5CC96258224B5289001576F8 /* 1553667540126.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 1553667540126.jpeg; sourceTree = "<group>"; };
 		5CC9625A224B6C72001576F8 /* ARCObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARCObject.h; sourceTree = "<group>"; };
 		5CC9625B224B6C72001576F8 /* ARCObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARCObject.m; sourceTree = "<group>"; };
+		5CC9625D2253511A001576F8 /* BlockObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BlockObject.h; sourceTree = "<group>"; };
+		5CC9625E2253511A001576F8 /* BlockObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BlockObject.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,6 +93,8 @@
 				5CC96258224B5289001576F8 /* 1553667540126.jpeg */,
 				5CC9625A224B6C72001576F8 /* ARCObject.h */,
 				5CC9625B224B6C72001576F8 /* ARCObject.m */,
+				5CC9625D2253511A001576F8 /* BlockObject.h */,
+				5CC9625E2253511A001576F8 /* BlockObject.m */,
 			);
 			path = ProfessionalExample;
 			sourceTree = "<group>";
@@ -167,6 +172,7 @@
 			files = (
 				5CC9625C224B6C72001576F8 /* ARCObject.m in Sources */,
 				5CC96255224B1FDB001576F8 /* MainTableViewCell.m in Sources */,
+				5CC9625F2253511A001576F8 /* BlockObject.m in Sources */,
 				5CC9623C224A319C001576F8 /* ViewController.m in Sources */,
 				5CC96247224A31AC001576F8 /* main.m in Sources */,
 				5CC96252224A3942001576F8 /* MainModel.m in Sources */,

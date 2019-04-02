@@ -12,6 +12,7 @@
 #import "MainTableViewCell.h"
 #import "ARCObject.h"
 #import <objc/runtime.h>
+#import "BlockObject.h"
 
 @interface ViewController () <UITableViewDelegate, UITableViewDataSource>
 
@@ -177,6 +178,46 @@
             typedef void (^Block) (void);
             Block first = [array firstObject];
             first();
+        }];
+        [blocks addRowModelWithTitle:@"Block使用__strong修饰符的自动变量和__block变量" detail:@"堆上的Block持有这些变量，栈上的Block并不持有这些变量。" selectedAction:^(UIViewController *controller, UITableView *tableView, NSIndexPath *indexPath) {
+            typedef void (^Block) (id);
+            __unsafe_unretained Block block;
+            Block block1;
+            {
+                NSMutableArray *array = [NSMutableArray arrayWithCapacity:1];
+                NSMutableArray *array1 = [NSMutableArray arrayWithCapacity:1];
+                block = ^(id obj) {
+                    [array addObject:obj];
+                    NSLog(@"array: %@, array count: %li", array, array.count);
+                };
+                block1 = ^(id obj) {
+                    [array1 addObject:obj];
+                    NSLog(@"array1: %@, array1 count: %li", array1, array1.count);
+                };
+            }
+            block([[NSObject alloc] init]);
+            block1([[NSObject alloc] init]);
+        }];
+        [blocks addRowModelWithTitle:@"__block变量为__weak修饰符的对象" detail:@"__block变量不持有该对象。" selectedAction:^(UIViewController *controller, UITableView *tableView, NSIndexPath *indexPath) {
+            typedef void (^Block) (id);
+            Block block;
+            {
+                NSMutableArray *array = [NSMutableArray arrayWithCapacity:1];
+                __block NSMutableArray __weak *array1 = array;
+                block = ^(id obj) {
+                    [array1 addObject:obj];
+                    NSLog(@"array1: %@, array1 count: %li", array1, array1.count);
+                };
+            }
+            block([[NSObject alloc] init]);
+        }];
+        [blocks addRowModelWithTitle:@"__block变量为__weak修饰符的对象" detail:@"__block变量不持有该对象。" selectedAction:^(UIViewController *controller, UITableView *tableView, NSIndexPath *indexPath) {
+            __block BlockObject *obj = [[BlockObject alloc] init];
+            obj.block = ^{
+                NSLog(@"%@", obj);
+                obj = nil;
+            };
+            obj.block();
         }];
         [_mainModel addSectionModel:blocks];
     }
