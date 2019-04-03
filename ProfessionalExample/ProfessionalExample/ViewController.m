@@ -211,7 +211,7 @@
             }
             block([[NSObject alloc] init]);
         }];
-        [blocks addRowModelWithTitle:@"__block变量为__weak修饰符的对象" detail:@"__block变量不持有该对象。" selectedAction:^(UIViewController *controller, UITableView *tableView, NSIndexPath *indexPath) {
+        [blocks addRowModelWithTitle:@"__block变量也可以避免循环引用" detail:@"使用__block变量避免循环引用，必须执行Block并手动释放__block变量对对象的引用（如置空或其它值）。" selectedAction:^(UIViewController *controller, UITableView *tableView, NSIndexPath *indexPath) {
             __block BlockObject *obj = [[BlockObject alloc] init];
             obj.block = ^{
                 NSLog(@"%@", obj);
@@ -220,6 +220,72 @@
             obj.block();
         }];
         [_mainModel addSectionModel:blocks];
+        
+        SectionModel *gcd = [SectionModel modelWithTitle:@"Grand Central Dispatch"];
+        [gcd addRowModelWithTitle:@"Serial Dispath Queue" detail:@"Serial Dispath Queue等待正在执行的任务结束后才开始执行下一个任务。" selectedAction:^(UIViewController *controller, UITableView *tableView, NSIndexPath *indexPath) {
+            dispatch_queue_t serialQueue = dispatch_queue_create("SerialQueue", DISPATCH_QUEUE_SERIAL);
+            for (int index = 0; index < 100; index++) {
+                dispatch_async(serialQueue, ^{
+                    printf("Serial Queue: %i\n", index);
+                });
+            }
+        }];
+        [gcd addRowModelWithTitle:@"Concurrent Dispath Queue" detail:@"Concurrent Dispath Queue不管正在执行的任务是否结束都开始执行下一个任务。" selectedAction:^(UIViewController *controller, UITableView *tableView, NSIndexPath *indexPath) {
+            dispatch_queue_t concurrentQueue = dispatch_queue_create("ConcurrentQueue", DISPATCH_QUEUE_CONCURRENT);
+            for (int index = 0; index < 100; index++) {
+                dispatch_async(concurrentQueue, ^{
+                    printf("Concurrent Queue: %i\n", index);
+                });
+            }
+        }];
+        [gcd addRowModelWithTitle:@"dispatch_set_target_queue" detail:@"将多个Serial Dispatch Queue使用dispatch_set_target_queue函数指定目标为某一个Serial Dispatch Queue这种方式可以防止多个Serial Dispatch Queue之间的并行执行。" selectedAction:^(UIViewController *controller, UITableView *tableView, NSIndexPath *indexPath) {
+            dispatch_queue_t serialQueue = dispatch_queue_create("SerialQueue", DISPATCH_QUEUE_SERIAL);
+            for (int index = 0; index < 10; index++) {
+                dispatch_queue_t serialQueue1 = dispatch_queue_create("SerialQueue1", DISPATCH_QUEUE_SERIAL);
+                dispatch_set_target_queue(serialQueue1, serialQueue);
+                dispatch_async(serialQueue1, ^{
+                    printf("Serial Queue1: %i\n", index);
+                });
+            }
+        }];
+        [gcd addRowModelWithTitle:@"Dispatch Group" detail:@"Dispatch Group用于监视一批处理的结束，一旦检测到所有处理结束，就会将结果处理追加到Dispatch Queue中。" selectedAction:^(UIViewController *controller, UITableView *tableView, NSIndexPath *indexPath) {
+            dispatch_queue_t serialQueue = dispatch_queue_create("SerialQueue", DISPATCH_QUEUE_SERIAL);
+            dispatch_queue_t globalQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+            dispatch_group_t group = dispatch_group_create();
+            dispatch_group_async(group, serialQueue, ^{
+                printf("Serial Queue\n");
+            });
+            dispatch_group_async(group, globalQueue, ^{
+                printf("Global Queue\n");
+            });
+            dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+                printf("Main Queue\n");
+            });
+            if (dispatch_group_wait(group, dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC))) == 0) {
+                printf("Dispatch Group结束\n");
+            } else {
+                printf("Dispatch Group在1秒后没有结束\n");
+            }
+        }];
+        [gcd addRowModelWithTitle:@"dispatch_barrier_async" detail:@"dispatch_barrier_async函数会等待前面追加到Concurrent Dispatch Queue中的所有处理全部结束之后再将指定处理追加到该Concurrent Dispatch Queue中。然后dispatch_barrier_async函数追加的处理结束后，才恢复Concurrent Dispatch Queue处理后面追加的处理。" selectedAction:^(UIViewController *controller, UITableView *tableView, NSIndexPath *indexPath) {
+            dispatch_queue_t concurrentQueue = dispatch_queue_create("com.xxxx.xxxx.concurrentQueue", DISPATCH_QUEUE_CONCURRENT);
+            dispatch_async(concurrentQueue, ^{
+                printf("Concurrent Queue: 1\n");
+            });
+            dispatch_async(concurrentQueue, ^{
+                printf("Concurrent Queue: 2\n");
+            });
+            dispatch_barrier_async(concurrentQueue, ^{
+                printf("Concurrent Queue: 3\n");
+            });
+            dispatch_async(concurrentQueue, ^{
+                printf("Concurrent Queue: 4\n");
+            });
+            dispatch_async(concurrentQueue, ^{
+                printf("Concurrent Queue: 5\n");
+            });
+        }];
+        [_mainModel addSectionModel:gcd];
     }
     
     return _mainModel;
@@ -227,7 +293,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     self.title = self.mainModel.title;
 }
