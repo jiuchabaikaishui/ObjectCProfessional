@@ -285,6 +285,33 @@
                 printf("Concurrent Queue: 5\n");
             });
         }];
+        [gcd addRowModelWithTitle:@"dispatch_apply" detail:@"dispatch_apply函数按指定的次数将Block追加到指定的Dispatch Queue中，并等待全部处理结束。" selectedAction:^(UIViewController *controller, UITableView *tableView, NSIndexPath *indexPath) {
+            dispatch_queue_t concurrentQueue = dispatch_queue_create("com.xxxx.xxxx.concurrentQueue", DISPATCH_QUEUE_CONCURRENT);
+            dispatch_apply(5, concurrentQueue, ^(size_t index) {
+                printf("Concurrent Queue: %li\n", index);
+            });
+            
+            printf("Concurrent Queue End.\n");
+        }];
+        [gcd addRowModelWithTitle:@"Dispatch Semaphore" detail:@"Dispatch Semaphore是持有计数的信号，该计数是多线程编程中的计数类型信号。是用更细粒度的对象实现排他控制。" selectedAction:^(UIViewController *controller, UITableView *tableView, NSIndexPath *indexPath) {
+            dispatch_queue_t globalQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+            dispatch_semaphore_t semaphore = dispatch_semaphore_create(1);
+            NSMutableArray *mArray = [NSMutableArray arrayWithCapacity:1];
+            for (int index = 0; index < 10000; index++) {
+                dispatch_async(globalQueue, ^{
+                    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+                    [mArray addObject:@(index)];
+                    dispatch_semaphore_signal(semaphore);
+                });
+            }
+        }];
+        [gcd addRowModelWithTitle:@"死锁" detail:@"GCD中的一些函数在指定的Block处理没有结束之前，不会返回。如dispatch_sync、dispatch_apply等。在使用这些同步等待处理执行的函数时，稍有不慎就会导致死锁。" selectedAction:^(UIViewController *controller, UITableView *tableView, NSIndexPath *indexPath) {
+            NSLog(@"1");
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                NSLog(@"2");
+            });
+            NSLog(@"3");
+        }];
         [_mainModel addSectionModel:gcd];
     }
     
